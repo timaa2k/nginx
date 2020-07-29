@@ -158,6 +158,7 @@ genrule(
           " --without-http_upstream_zone_module" +
           " 2>&1 >$(@D)/bazel-objs/autoconf.log",
     toolchains = [
+        "@bazel_tools//tools/cpp:cc_flags",
         "@bazel_tools//tools/cpp:current_cc_toolchain",
     ],
     visibility = [
