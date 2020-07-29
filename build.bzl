@@ -611,6 +611,7 @@ def nginx_repositories_boringssl(bind):
         name = "boringssl",
         commit = "5b8bd1ba221804c81c8a92c6d1d353ef43a851ab",  # 2018-12-14
         remote = "https://boringssl.googlesource.com/boringssl",
+        shallow_since = "1544807902 +0000",
     )
 
     if bind:
@@ -629,6 +630,7 @@ def nginx_repositories_brotli(bind):
         name = "org_brotli",
         commit = "222564a95d9ab58865a096b8d9f7324ea5f2e03e",  # 2016-12-02
         remote = "https://github.com/google/brotli.git",
+        shallow_since = "1480681940 +0100",
     )
 
     if bind:
@@ -648,6 +650,7 @@ def nginx_repositories_ngx_brotli(nginx):
         build_file_content = _NGX_BROTLI_BUILD_FILE.format(nginx = nginx),
         commit = "5ead1ada782b18c7b38a3c2798a40a334801c7b6",  # 2016-12-05
         remote = "https://nginx.googlesource.com/ngx_brotli",
+        shallow_since = "1480976257 +0000",
     )
 
 def nginx_repositories_pcre(bind):
@@ -672,14 +675,16 @@ def nginx_repositories_pkgoss(nginx):
                              _PKGOSS_BUILD_FILE_TAIL,
         commit = "2456bf617acaa11b06c11481082797909b300f45",  # nginx-1.15.8
         remote = "https://nginx.googlesource.com/nginx-pkgoss",
+        shallow_since = "1545733310 +0300",
     )
 
 def nginx_repositories_zlib(bind):
-    new_git_repository(
+    http_archive(
         name = "nginx_zlib",
         build_file_content = _ZLIB_BUILD_FILE,
-        commit = "cacf7f1d4e3d44d871b605da3b647f07d718623f",  # v1.2.11
-        remote = "https://github.com/madler/zlib.git",
+        sha256 = "c3e5e9fdd5004dcb542feda5ee4f0ff0744628baf8ed2dd5d66f8ca1197cb1a1",
+        strip_prefix = "zlib-1.2.11",
+        url = "https://zlib.net/zlib-1.2.11.tar.gz",
     )
 
     if bind:
