@@ -188,7 +188,7 @@ extern ngx_module_t  ngx_http_gzip_filter_module;
 #if (NGX_HTTP_BROTLI_FILTER)
 extern ngx_module_t  ngx_http_brotli_filter_module;
 #endif
-#if (NGX_HTTP_POSTPONE)
+#if (NGX_HTTP)
 extern ngx_module_t  ngx_http_postpone_filter_module;
 #endif
 #if (NGX_HTTP_SSI)
@@ -477,7 +477,7 @@ ngx_module_t *ngx_modules[] = {
 #if (NGX_HTTP_BROTLI_FILTER)
     &ngx_http_brotli_filter_module,
 #endif
-#if (NGX_HTTP_POSTPONE)
+#if (NGX_HTTP)
     &ngx_http_postpone_filter_module,
 #endif
 #if (NGX_HTTP_SSI)
@@ -768,7 +768,7 @@ char *ngx_module_names[] = {
 #if (NGX_HTTP_BROTLI_FILTER)
     "ngx_http_brotli_filter_module",
 #endif
-#if (NGX_HTTP_POSTPONE)
+#if (NGX_HTTP)
     "ngx_http_postpone_filter_module",
 #endif
 #if (NGX_HTTP_SSI)

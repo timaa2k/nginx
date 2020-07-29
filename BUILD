@@ -399,6 +399,7 @@ cc_library(
         "src/http/ngx_http_file_cache.c",
         "src/http/ngx_http_header_filter_module.c",
         "src/http/ngx_http_parse.c",
+        "src/http/ngx_http_postpone_filter_module.c",
         "src/http/ngx_http_request.c",
         "src/http/ngx_http_request.h",
         "src/http/ngx_http_request_body.c",
@@ -473,7 +474,6 @@ cc_library(
     deps = [
         ":core",
         ":http",
-        ":http_postpone",
     ],
 )
 
@@ -780,21 +780,6 @@ cc_library(
 )
 
 cc_library(
-    name = "http_postpone",
-    srcs = [
-        "src/http/ngx_http_postpone_filter_module.c",
-    ],
-    copts = nginx_copts,
-    defines = [
-        "NGX_HTTP_POSTPONE",
-    ],
-    deps = [
-        ":core",
-        ":http",
-    ],
-)
-
-cc_library(
     name = "http_proxy",
     srcs = [
         "src/http/modules/ngx_http_proxy_module.c",
@@ -911,7 +896,6 @@ cc_library(
     deps = [
         ":core",
         ":http",
-        ":http_postpone",
     ],
 )
 
@@ -945,7 +929,6 @@ cc_library(
     deps = [
         ":core",
         ":http",
-        ":http_postpone",
     ],
 )
 
@@ -1537,5 +1520,5 @@ pkg_deb(
     preinst = "@nginx_pkgoss//:debian_preinst",
     prerm = "@nginx_pkgoss//:debian_prerm",
     section = "httpd",
-    version = "1.15.12",
+    version = "1.17.0",
 )
