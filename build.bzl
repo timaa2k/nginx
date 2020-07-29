@@ -657,9 +657,9 @@ def nginx_repositories_pcre(bind):
     http_archive(
         name = "nginx_pcre",
         build_file_content = _PCRE_BUILD_FILE,
-        sha256 = "69acbc2fbdefb955d42a4c606dfde800c2885711d2979e356c0636efde9ec3b5",
-        strip_prefix = "pcre-8.42",
-        url = "https://ftp.pcre.org/pub/pcre/pcre-8.42.tar.gz",
+        sha256 = "aecafd4af3bd0f3935721af77b889d9024b2e01d96b58471bd91a3063fb47728",
+        strip_prefix = "pcre-8.44",
+        url = "https://ftp.pcre.org/pub/pcre/pcre-8.44.tar.gz",
     )
 
     if bind:
