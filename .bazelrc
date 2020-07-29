@@ -1,5 +1,2 @@
-# Use Python 2.x to workaround a bug in pkg_deb().
-build --host_force_python=PY2
-
 # Use CC/CXX instead of Xcode on macOS, since it doesn't work with genrule().
 build --action_env=BAZEL_USE_CPP_ONLY_TOOLCHAIN=1
