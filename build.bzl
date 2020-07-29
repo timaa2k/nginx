@@ -673,9 +673,9 @@ def nginx_repositories_pkgoss(nginx):
         name = "nginx_pkgoss",
         build_file_content = _PKGOSS_BUILD_FILE.format(nginx = nginx) +
                              _PKGOSS_BUILD_FILE_TAIL,
-        commit = "022bf685d71de5701faf171e1e7ceeb38adcb390",  # nginx-1.15.10
+        commit = "df8c41c48db68971d6cdff38827175717298c8a2",  # nginx-1.15.11
         remote = "https://nginx.googlesource.com/nginx-pkgoss",
-        shallow_since = "1553609229 +0300",
+        shallow_since = "1554808864 +0300",
     )
 
 def nginx_repositories_zlib(bind):
