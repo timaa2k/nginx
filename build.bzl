@@ -609,9 +609,9 @@ cc_library(
 def nginx_repositories_boringssl(bind):
     git_repository(
         name = "boringssl",
-        commit = "5b8bd1ba221804c81c8a92c6d1d353ef43a851ab",  # 2018-12-14
+        commit = "597b810379e126ae05d32c1d94b1a9464385acd0",  # 2020-06-23
         remote = "https://boringssl.googlesource.com/boringssl",
-        shallow_since = "1544807902 +0000",
+        shallow_since = "1592935160 +0000",
     )
 
     if bind:
