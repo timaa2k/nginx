@@ -276,6 +276,9 @@ extern ngx_module_t  ngx_stream_split_clients_module;
 #if (NGX_STREAM_RETURN)
 extern ngx_module_t  ngx_stream_return_module;
 #endif
+#if (NGX_STREAM_SET)
+extern ngx_module_t  ngx_stream_set_module;
+#endif
 #if (NGX_STREAM_UPSTREAM_HASH)
 extern ngx_module_t  ngx_stream_upstream_hash_module;
 #endif
@@ -564,6 +567,9 @@ ngx_module_t *ngx_modules[] = {
 #endif
 #if (NGX_STREAM_RETURN)
     &ngx_stream_return_module,
+#endif
+#if (NGX_STREAM_SET)
+    &ngx_stream_set_module,
 #endif
 #if (NGX_STREAM_UPSTREAM_HASH)
     &ngx_stream_upstream_hash_module,
@@ -856,6 +862,9 @@ char *ngx_module_names[] = {
 #if (NGX_STREAM_RETURN)
     "ngx_stream_return_module",
 #endif
+#if (NGX_STREAM_SET)
+    "ngx_stream_set_module",
+#endif
 #if (NGX_STREAM_UPSTREAM_HASH)
     "ngx_stream_upstream_hash_module",
 #endif
@@ -1145,6 +1154,9 @@ ngx_show_configure_options(void)
 #endif
 #if !(NGX_STREAM_RETURN)
     ngx_write_stderr(" --without-stream_return_module");
+#endif
+#if !(NGX_STREAM_SET)
+    ngx_write_stderr(" --without-stream_set_module");
 #endif
 #if !(NGX_STREAM_SPLIT_CLIENTS)
     ngx_write_stderr(" --without-stream_split_clients_module");

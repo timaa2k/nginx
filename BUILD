@@ -1293,6 +1293,21 @@ cc_library(
 )
 
 cc_library(
+    name = "stream_set",
+    srcs = [
+        "src/stream/ngx_stream_set_module.c",
+    ],
+    copts = nginx_copts,
+    defines = [
+        "NGX_STREAM_SET",
+    ],
+    deps = [
+        ":core",
+        ":stream",
+    ],
+)
+
+cc_library(
     name = "stream_split_clients",
     srcs = [
         "src/stream/ngx_stream_split_clients_module.c",
@@ -1436,6 +1451,7 @@ cc_binary(
         ":stream_map",
         ":stream_realip",
         ":stream_return",
+        ":stream_set",
         ":stream_split_clients",
         ":stream_ssl_preread",
         ":stream_upstream_hash",
@@ -1520,5 +1536,5 @@ pkg_deb(
     preinst = "@nginx_pkgoss//:debian_preinst",
     prerm = "@nginx_pkgoss//:debian_prerm",
     section = "httpd",
-    version = "1.19.2",
+    version = "1.19.3",
 )
