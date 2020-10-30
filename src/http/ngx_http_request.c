@@ -858,6 +858,7 @@ enum ssl_select_cert_result_t
 ngx_http_ssl_client_hello(const SSL_CLIENT_HELLO *client_hello)
 {
     CBS                extension, list, name;
+    int                alert, rc;
     size_t             len;
     uint8_t            type;
     ngx_str_t          hostname;
@@ -893,12 +894,7 @@ ngx_http_ssl_client_hello(const SSL_CLIENT_HELLO *client_hello)
         return ssl_select_cert_error;
     }
 
-    /*
-     * Store requested server name and call the regular callback, but ignore
-     * its response, since it returns SSL_TLSEXT_ERRO_NOACK for both: errors
-     * and when no server matching requested server name was found (in which
-     * case the default server is used).
-     */
+    /* Store requested server name and call the regular callback. */
 
     c = ngx_ssl_get_connection(client_hello->ssl);
 
@@ -911,16 +907,28 @@ ngx_http_ssl_client_hello(const SSL_CLIENT_HELLO *client_hello)
     ngx_memcpy(hostname.data, CBS_data(&name), hostname.len);
     hostname.data[hostname.len] = '\0';
 
-    (void) ngx_http_ssl_servername(client_hello->ssl, 0, hostname.data);
+    rc = ngx_http_ssl_servername(client_hello->ssl, &alert, hostname.data);
 
-    return ssl_select_cert_success;
+    /*
+     * BoringSSL cannot send a specific alert from the early callback, so
+     * don't error out here if we need to send one (e.g. unrecognized name),
+     * and continue processing the handshake, so that the desired alert can
+     * be sent from the regular callback.
+     */
+
+    if (rc == SSL_TLSEXT_ERR_ALERT_FATAL && alert == SSL_AD_INTERNAL_ERROR) {
+        return ssl_select_cert_error;
+    } else {
+        return ssl_select_cert_success;
+    }
 }
 
 #elif defined(SSL_CLIENT_HELLO_CB)
 
 int
-ngx_http_ssl_client_hello(ngx_ssl_conn_t *ssl_conn, int *al, void *arg)
+ngx_http_ssl_client_hello(ngx_ssl_conn_t *ssl_conn, int *ad, void *arg)
 {
+    int                   rc;
     size_t                len, remaining;
     ngx_str_t             hostname;
     ngx_connection_t     *c;
@@ -977,12 +985,7 @@ ngx_http_ssl_client_hello(ngx_ssl_conn_t *ssl_conn, int *al, void *arg)
         return SSL_CLIENT_HELLO_ERROR;
     }
 
-    /*
-     * Store requested server name and call the regular callback, but ignore
-     * its response, since it returns SSL_TLSEXT_ERRO_NOACK for both: errors
-     * and when no server matching requested server name was found (in which
-     * case the default server is used).
-     */
+    /* Store requested server name and call the regular callback. */
 
     c = ngx_ssl_get_connection(ssl_conn);
 
@@ -995,9 +998,10 @@ ngx_http_ssl_client_hello(ngx_ssl_conn_t *ssl_conn, int *al, void *arg)
     ngx_memcpy(hostname.data, p, hostname.len);
     hostname.data[hostname.len] = '\0';
 
-    (void) ngx_http_ssl_servername(ssl_conn, 0, hostname.data);
+    rc = ngx_http_ssl_servername(ssl_conn, ad, hostname.data);
 
-    return SSL_CLIENT_HELLO_SUCCESS;
+    return rc == SSL_TLSEXT_ERR_OK ? SSL_CLIENT_HELLO_SUCCESS
+                                   : SSL_CLIENT_HELLO_ERROR;
 }
 
 #endif
@@ -1021,7 +1025,14 @@ ngx_http_ssl_servername(ngx_ssl_conn_t *ssl_conn, int *ad, void *arg)
         return SSL_TLSEXT_ERR_ALERT_FATAL;
     }
 
+    hc = c->data;
+
 #if defined(OPENSSL_IS_BORINGSSL) || defined(SSL_CLIENT_HELLO_CB)
+    if (hc->ssl_servername) {
+        /* This function was already called from the early callback. */
+        goto done;
+    }
+
     if (arg != NULL) {
         servername = (const char *) arg;
     } else
@@ -1029,7 +1040,9 @@ ngx_http_ssl_servername(ngx_ssl_conn_t *ssl_conn, int *ad, void *arg)
     servername = SSL_get_servername(ssl_conn, TLSEXT_NAMETYPE_host_name);
 
     if (servername == NULL) {
-        return SSL_TLSEXT_ERR_OK;
+        ngx_log_debug0(NGX_LOG_DEBUG_HTTP, c->log, 0,
+                       "SSL server name: null");
+        goto done;
     }
 
     ngx_log_debug1(NGX_LOG_DEBUG_HTTP, c->log, 0,
@@ -1038,7 +1051,7 @@ ngx_http_ssl_servername(ngx_ssl_conn_t *ssl_conn, int *ad, void *arg)
     host.len = ngx_strlen(servername);
 
     if (host.len == 0) {
-        return SSL_TLSEXT_ERR_OK;
+        goto done;
     }
 
     host.data = (u_char *) servername;
@@ -1046,32 +1059,27 @@ ngx_http_ssl_servername(ngx_ssl_conn_t *ssl_conn, int *ad, void *arg)
     rc = ngx_http_validate_host(&host, c->pool, 1);
 
     if (rc == NGX_ERROR) {
-        *ad = SSL_AD_INTERNAL_ERROR;
-        return SSL_TLSEXT_ERR_ALERT_FATAL;
+        goto error;
     }
 
     if (rc == NGX_DECLINED) {
-        return SSL_TLSEXT_ERR_OK;
+        goto done;
     }
-
-    hc = c->data;
 
     rc = ngx_http_find_virtual_server(c, hc->addr_conf->virtual_names, &host,
                                       NULL, &cscf);
 
     if (rc == NGX_ERROR) {
-        *ad = SSL_AD_INTERNAL_ERROR;
-        return SSL_TLSEXT_ERR_ALERT_FATAL;
+        goto error;
     }
 
     if (rc == NGX_DECLINED) {
-        return SSL_TLSEXT_ERR_OK;
+        goto done;
     }
 
     hc->ssl_servername = ngx_palloc(c->pool, sizeof(ngx_str_t));
     if (hc->ssl_servername == NULL) {
-        *ad = SSL_AD_INTERNAL_ERROR;
-        return SSL_TLSEXT_ERR_ALERT_FATAL;
+        goto error;
     }
 
     *hc->ssl_servername = host;
@@ -1088,8 +1096,7 @@ ngx_http_ssl_servername(ngx_ssl_conn_t *ssl_conn, int *ad, void *arg)
 
     if (sscf->ssl.ctx && sscf->ssl.ctx != SSL_get_SSL_CTX(ssl_conn)) {
         if (SSL_set_SSL_CTX(ssl_conn, sscf->ssl.ctx) == NULL) {
-            *ad = SSL_AD_INTERNAL_ERROR;
-            return SSL_TLSEXT_ERR_ALERT_FATAL;
+            goto error;
         }
 
         /*
@@ -1115,7 +1122,22 @@ ngx_http_ssl_servername(ngx_ssl_conn_t *ssl_conn, int *ad, void *arg)
 #endif
     }
 
+done:
+
+    sscf = ngx_http_get_module_srv_conf(hc->conf_ctx, ngx_http_ssl_module);
+
+    if (sscf->reject_handshake) {
+        c->ssl->handshake_rejected = 1;
+        *ad = SSL_AD_UNRECOGNIZED_NAME;
+        return SSL_TLSEXT_ERR_ALERT_FATAL;
+    }
+
     return SSL_TLSEXT_ERR_OK;
+
+error:
+
+    *ad = SSL_AD_INTERNAL_ERROR;
+    return SSL_TLSEXT_ERR_ALERT_FATAL;
 }
 
 #endif
