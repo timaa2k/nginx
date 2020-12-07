@@ -1536,5 +1536,5 @@ pkg_deb(
     preinst = "@nginx_pkgoss//:debian_preinst",
     prerm = "@nginx_pkgoss//:debian_prerm",
     section = "httpd",
-    version = "1.19.4",
+    version = "1.19.5",
 )
