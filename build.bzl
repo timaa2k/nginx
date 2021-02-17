@@ -1,4 +1,4 @@
-# Copyright (C) 2015-2019 Google Inc.
+# Copyright (C) 2015-2021 Google Inc.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -54,7 +54,7 @@ nginx_cxxopts = _common_copts + [
 ]
 
 _NGX_BROTLI_BUILD_FILE = """
-# Copyright (C) 2015-2019 Google Inc.
+# Copyright (C) 2015-2021 Google Inc.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -136,7 +136,7 @@ cc_binary(
 """
 
 _PCRE_BUILD_FILE = """
-# Copyright (C) 2015-2019 Google Inc.
+# Copyright (C) 2015-2021 Google Inc.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -268,7 +268,7 @@ cc_library(
 """
 
 _PKGOSS_BUILD_FILE = """
-# Copyright (C) 2015-2019 Google Inc.
+# Copyright (C) 2015-2021 Google Inc.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -544,7 +544,7 @@ pkg_tar(
 """
 
 _ZLIB_BUILD_FILE = """
-# Copyright (C) 2015-2019 Google Inc.
+# Copyright (C) 2015-2021 Google Inc.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -673,9 +673,9 @@ def nginx_repositories_pkgoss(nginx):
         name = "nginx_pkgoss",
         build_file_content = _PKGOSS_BUILD_FILE.format(nginx = nginx) +
                              _PKGOSS_BUILD_FILE_TAIL,
-        commit = "3beb77a81cf0f56f37a90ba2c2641559425d71e8",  # nginx-1.19.6
+        commit = "07ce85eee27f01a69cd70bb1f251e546f2fa750b",  # nginx-1.19.7
         remote = "https://nginx.googlesource.com/nginx-pkgoss",
-        shallow_since = "1608040820 +0300",
+        shallow_since = "1613491796 +0300",
     )
 
 def nginx_repositories_zlib(bind):
