@@ -1075,6 +1075,7 @@ cc_library(
         "src/mail/ngx_mail_core_module.c",
         "src/mail/ngx_mail_handler.c",
         "src/mail/ngx_mail_proxy_module.c",
+        "src/mail/ngx_mail_realip_module.c",
         "src/mail/ngx_mail_ssl_module.c",
         "src/mail/ngx_mail_ssl_module.h",
     ],
@@ -1536,5 +1537,5 @@ pkg_deb(
     preinst = "@nginx_pkgoss//:debian_preinst",
     prerm = "@nginx_pkgoss//:debian_prerm",
     section = "httpd",
-    version = "1.19.7",
+    version = "1.19.8",
 )

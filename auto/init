@@ -50,6 +50,8 @@ default:	all
 
 clean:
 	rm -rf Makefile $NGX_OBJS
+
+.PHONY:	default clean
 END
 
 fi

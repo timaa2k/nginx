@@ -242,6 +242,7 @@ extern ngx_module_t  ngx_mail_smtp_module;
 #if (NGX_MAIL)
 extern ngx_module_t  ngx_mail_auth_http_module;
 extern ngx_module_t  ngx_mail_proxy_module;
+extern ngx_module_t  ngx_mail_realip_module;
 #endif
 
 #if (NGX_STREAM)
@@ -534,6 +535,7 @@ ngx_module_t *ngx_modules[] = {
 #if (NGX_MAIL)
     &ngx_mail_auth_http_module,
     &ngx_mail_proxy_module,
+    &ngx_mail_realip_module,
 #endif
 
 #if (NGX_STREAM)
@@ -828,6 +830,7 @@ char *ngx_module_names[] = {
 #if (NGX_MAIL)
     "ngx_mail_auth_http_module",
     "ngx_mail_proxy_module",
+    "ngx_mail_realip_module",
 #endif
 
 #if (NGX_STREAM)
