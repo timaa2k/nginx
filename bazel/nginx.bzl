@@ -22,12 +22,26 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-workspace(name = "nginx")
+_common_copts = [
+    "-fno-common",
+    "-fvisibility=hidden",
+    "-Wall",
+    "-Werror",
+    "-Wextra",
+    "-Wformat=2",
+    "-Wlong-long",
+    "-Wpointer-arith",
+    "-Wshadow",
+    "-Wno-deprecated-declarations",
+    "-Wno-unused-parameter",
+]
 
-load("//bazel:repositories.bzl", "nginx_repositories")
+nginx_copts = _common_copts + [
+    "-Wmissing-prototypes",
+    "-Wold-style-definition",
+    "-Wstrict-prototypes",
+]
 
-nginx_repositories()
-
-load("//bazel:dependencies.bzl", "nginx_dependencies")
-
-nginx_dependencies()
+nginx_cxxopts = _common_copts + [
+    "-Wmissing-declarations",
+]

@@ -22,12 +22,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-workspace(name = "nginx")
+load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 
-load("//bazel:repositories.bzl", "nginx_repositories")
-
-nginx_repositories()
-
-load("//bazel:dependencies.bzl", "nginx_dependencies")
-
-nginx_dependencies()
+def nginx_dependencies():
+    rules_pkg_dependencies()

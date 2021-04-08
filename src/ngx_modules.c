@@ -1183,21 +1183,21 @@ ngx_show_configure_options(void)
 #endif
 
 #if (NGX_SSL)
-    ngx_write_stderr(" --with-openssl=//external:boringssl");
+    ngx_write_stderr(" --with-openssl=@boringssl");
 #endif
 #if (NGX_PCRE)
-    ngx_write_stderr(" --with-pcre=//external:pcre");
+    ngx_write_stderr(" --with-pcre=@pcre");
     ngx_write_stderr(" --with-pcre-jit");
 #endif
 #if (NGX_ZLIB)
-    ngx_write_stderr(" --with-zlib=//external:zlib");
+    ngx_write_stderr(" --with-zlib=@zlib");
 #endif
 
 #if (NGX_HTTP_BROTLI_FILTER)
-    ngx_write_stderr(" --add-module=//ngx_brotli:http_brotli_filter");
+    ngx_write_stderr(" --add-module=@ngx_brotli//:http_brotli_filter");
 #endif
 #if (NGX_HTTP_BROTLI_STATIC)
-    ngx_write_stderr(" --add-module=//ngx_brotli:http_brotli_static");
+    ngx_write_stderr(" --add-module=@ngx_brotli//:http_brotli_static");
 #endif
 
     ngx_write_stderr(NGX_LINEFEED);

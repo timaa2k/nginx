@@ -22,12 +22,59 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-workspace(name = "nginx")
+load("@nginx//bazel:nginx.bzl", "nginx_copts")
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
 
-load("//bazel:repositories.bzl", "nginx_repositories")
+licenses(["notice"])  # BSD license
 
-nginx_repositories()
+exports_files(["LICENSE"])
 
-load("//bazel:dependencies.bzl", "nginx_dependencies")
+cc_library(
+    name = "http_brotli_filter",
+    srcs = [
+        "src/ngx_http_brotli_filter_module.c",
+    ],
+    copts = nginx_copts,
+    defines = [
+        "NGX_HTTP_BROTLI_FILTER",
+    ],
+    visibility = [
+        "//visibility:public",
+    ],
+    deps = [
+        "@nginx//:core",
+        "@nginx//:http",
+        "@org_brotli//:brotlienc",
+    ],
+)
 
-nginx_dependencies()
+cc_library(
+    name = "http_brotli_static",
+    srcs = [
+        "src/ngx_http_brotli_static_module.c",
+    ],
+    copts = nginx_copts,
+    defines = [
+        "NGX_HTTP_BROTLI_STATIC",
+    ],
+    visibility = [
+        "//visibility:public",
+    ],
+    deps = [
+        "@nginx//:core",
+        "@nginx//:http",
+    ],
+)
+
+cc_binary(
+    name = "nginx",
+    srcs = [
+        "@nginx//:modules",
+    ],
+    copts = nginx_copts,
+    deps = [
+        ":http_brotli_filter",
+        ":http_brotli_static",
+        "@nginx//:core",
+    ],
+)

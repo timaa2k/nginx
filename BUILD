@@ -22,9 +22,9 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
+load("@nginx//bazel:nginx.bzl", "nginx_copts")
 load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
 load("@rules_pkg//:pkg.bzl", "pkg_deb", "pkg_tar")
-load(":build.bzl", "nginx_copts")
 
 licenses(["notice"])  # BSD license
 
@@ -371,9 +371,9 @@ cc_library(
         ],
     }),
     deps = [
-        "//external:boringssl_crypto",
-        "//external:boringssl_ssl",
-        "//external:pcre",
+        "@boringssl//:crypto",
+        "@boringssl//:ssl",
+        "@pcre",
     ],
 )
 
@@ -444,7 +444,7 @@ cc_library(
     ],
     deps = [
         ":core",
-        "//external:zlib",
+        "@zlib",
     ],
 )
 
@@ -655,7 +655,7 @@ cc_library(
     deps = [
         ":core",
         ":http",
-        "//external:zlib",
+        "@zlib",
     ],
 )
 
@@ -671,7 +671,7 @@ cc_library(
     deps = [
         ":core",
         ":http",
-        "//external:zlib",
+        "@zlib",
     ],
 )
 
@@ -1200,7 +1200,7 @@ cc_library(
     ],
     deps = [
         ":core",
-        "//external:zlib",
+        "@zlib",
     ],
 )
 
@@ -1469,9 +1469,9 @@ genrule(
     srcs = [
         ":LICENSE",
         "@boringssl//:LICENSE",
-        "@nginx_pcre//:LICENCE",
-        "@nginx_zlib//:README",
         "@org_brotli//:LICENSE",
+        "@pcre//:LICENCE",
+        "@zlib//:README",
     ],
     outs = [
         "usr/share/doc/nginx-google/copyright",
@@ -1485,9 +1485,9 @@ genrule(
           "echo \"\n\nBrotli license:\n===============\n\" >> $(@);" +
           "cat $(location @org_brotli//:LICENSE) >> $(@);" +
           "echo \"\n\nPCRE license:\n=============\n\" >> $(@);" +
-          "cat $(location @nginx_pcre//:LICENCE) >> $(@);" +
+          "cat $(location @pcre//:LICENCE) >> $(@);" +
           "echo \"\n\nzlib license:\n=============\n\" >> $(@);" +
-          "cat $(location @nginx_zlib//:README) | grep -A99 Copyright >> $(@)",
+          "cat $(location @zlib//:README) | grep -A99 Copyright >> $(@)",
 )
 
 pkg_tar(

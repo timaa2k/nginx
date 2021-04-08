@@ -22,12 +22,41 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-workspace(name = "nginx")
+load("@rules_cc//cc:defs.bzl", "cc_library")
 
-load("//bazel:repositories.bzl", "nginx_repositories")
+licenses(["notice"])
 
-nginx_repositories()
+exports_files(["README"])
 
-load("//bazel:dependencies.bzl", "nginx_dependencies")
-
-nginx_dependencies()
+cc_library(
+    name = "zlib",
+    srcs = [
+        "adler32.c",
+        "crc32.c",
+        "crc32.h",
+        "deflate.c",
+        "deflate.h",
+        "infback.c",
+        "inffast.c",
+        "inffast.h",
+        "inffixed.h",
+        "inflate.c",
+        "inflate.h",
+        "inftrees.c",
+        "inftrees.h",
+        "trees.c",
+        "trees.h",
+        "zconf.h",
+        "zutil.c",
+        "zutil.h",
+    ],
+    hdrs = [
+        "zlib.h",
+    ],
+    defines = [
+        "Z_SOLO",
+    ],
+    visibility = [
+        "//visibility:public",
+    ],
+)
