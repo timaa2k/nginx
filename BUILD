@@ -22,12 +22,13 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+load("@rules_pkg//:pkg.bzl", "pkg_deb", "pkg_tar")
+load(":build.bzl", "nginx_copts")
+
 licenses(["notice"])  # BSD license
 
 exports_files(["LICENSE"])
-
-load(":build.bzl", "nginx_copts")
-load("@rules_pkg//:pkg.bzl", "pkg_deb", "pkg_tar")
 
 package(
     default_visibility = [

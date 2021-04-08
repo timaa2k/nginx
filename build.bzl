@@ -330,7 +330,7 @@ genrule(
     ],
     cmd = "sed -e 's|#DEBHELPER#|" +
           "if [ -x \\"/etc/init.d/nginx\\" ]; then\\\\n" +
-          "\\\\tupdate-rc.d nginx defaults >/dev/null \\|\\| exit $$?\\\\n" +
+          "\\\\tupdate-rc.d nginx defaults >/dev/null \\\\|\\\\| exit $$?\\\\n" +
           "fi\\\\n" +
           "|g'" +
           " < $(<) > $(@)",
@@ -382,7 +382,7 @@ genrule(
           "fi\\\\n" +
           "\\\\n" +
           "if [ -d /run/systemd/system ] ; then\\\\n" +
-          "\\\\tsystemctl --system daemon-reload >/dev/null \\|\\| true\\\\n" +
+          "\\\\tsystemctl --system daemon-reload >/dev/null \\\\|\\\\| true\\\\n" +
           "fi\\\\n" +
           "|g'" +
           " < $(<) > $(@)",
