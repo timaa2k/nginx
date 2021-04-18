@@ -165,7 +165,7 @@ genrule(
 genrule(
     name = "debian_etc_nginx_conf_d_default_conf",
     srcs = [
-        "debian/nginx.vh.default.conf",
+        "debian/nginx.default.conf",
     ],
     outs = [
         "etc/nginx/conf.d/default.conf",
