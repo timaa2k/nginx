@@ -48,9 +48,9 @@ def nginx_repositories():
     # BoringSSL
     git_repository(
         name = "boringssl",
-        commit = "c5f0e58e653d2d9afa8facc090ce09f8aaa3fa0d",  # 2021-03-23
+        commit = "25ba1f46a68aeeffae73d54824a3293c53ea205f",  # 2021-05-14
         remote = "https://boringssl.googlesource.com/boringssl",
-        shallow_since = "1616522438 +0000",
+        shallow_since = "1621026598 +0000",
     )
 
     # PCRE
