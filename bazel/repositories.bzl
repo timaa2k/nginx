@@ -34,9 +34,9 @@ def nginx_repositories():
     new_git_repository(
         name = "nginx_pkgoss",
         build_file = "@nginx//bazel/external:nginx_pkgoss.BUILD",
-        commit = "39dacf6a68cc1af4b1110f3bc46ade6026e4a387",  # nginx-1.21.2
+        commit = "48ec648c7fd9157a68f209b60e7abb25350d1ce5",  # nginx-1.21.3
         remote = "https://nginx.googlesource.com/nginx-pkgoss",
-        shallow_since = "1630424319 +0300",
+        shallow_since = "1631031305 +0300",
     )
 
     http_archive(
