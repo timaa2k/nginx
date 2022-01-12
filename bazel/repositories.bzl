@@ -59,7 +59,7 @@ def nginx_repositories():
         build_file = "@nginx//bazel/external:pcre.BUILD",
         sha256 = "aecafd4af3bd0f3935721af77b889d9024b2e01d96b58471bd91a3063fb47728",
         strip_prefix = "pcre-8.44",
-        url = "https://ftp.pcre.org/pub/pcre/pcre-8.44.tar.gz",
+        url = "https://downloads.sourceforge.net/project/pcre/pcre/8.44/pcre-8.44.tar.gz",
     )
 
     # zlib
